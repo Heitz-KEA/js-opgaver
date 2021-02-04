@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="da">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opgave</title>
+</head>
+
+<body>
+    Hvad er lændgen?
+    <input type="text" id="ln">
+    <br>
+    Hvad er bredden?
+    <input type="text" id="bn">
+    <br>
+    <button id="knap">Klik her for at finde arealet</button>
+
+    <script>
+        document.querySelector("#knap").addEventListener("click", minfunktion);
+
+        function minfunktion() {
+            console.log("arealet er " + document.querySelector("#ln").value * document.querySelector("#bn").value);
+        }
+
+    </script>
+</body>
+
+</html>
