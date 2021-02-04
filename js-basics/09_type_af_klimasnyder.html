@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="da">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opgave</title>
+</head>
+
+<body>
+
+    Hvor mange timer rejser du?
+    <input type="text" id="ln">
+    <br>
+    <button id="knap">Udregn</button>
+
+    <script>
+        document.querySelector("#knap").addEventListener("click", minfunktion);
+
+
+        function minfunktion() {
+            console.log("Du har fløjet " +
+                document.querySelector("#ln").value + " timer, og udledt " + document.querySelector("#ln").value * 109 + " KG co2");
+
+            let result = document.querySelector("#ln").value * 109;
+            if (result < 100) {
+                console.log("Tæt på Thunberg ");
+            } else if (result < 200) {
+                console.log("Ja ja, du behøver ikke at melde dig ud af Å!");
+            } else if (result < 600) {
+                console.log("Det er godt for turismen i nordeuropa.");
+            } else if (result > 600) {
+                console.log("Nå ja vi kan jo altid kolonisere en anden planet ...");
+            }
+        }
+    </script>
+</body></html>
