@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="da">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Persongalleri</title>
+    <style>
+        img {
+            max-height: 100%;
+            max-width: 100%;
+        }
+
+        main {
+            display: grid;
+            grid-gap: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            justify-items: center;
+        }
+
+        article {
+            padding: 20px;
+            border: 1px solid orange;
+            border-radius: 20px;
+            transition: all 1s;
+        }
+
+        article p,
+        h2 {
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <template>
+            <article>
+                <img src="" alt="" class="billede">
+                <h2 class="navn"></h2>
+                <p class="titel"></p>
+                <p class="fødseldag"></p>
+                <p class="hobby"></p>
+                <p class="tro"></p>
+            </article>
+        </template>
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", vis);
+
+        const url = "https://persongalleri-5d3e.restdb.io/rest/persongalleri";
+
+        const options = {
+            headers: {
+                'x-apikey': "600fe9211346a1524ff12e31"
+            }
+        };
+
+        async function hentData() {
+            const resspons = await fetch(url, options);
+            const json = await resspons.json();
+            vis(json);
+        }
+
+        const main = document.querySelector("main");
+        const template = document.querySelector("template").content;
+        const medieurl = "https://persongalleri-5d3e.restdb.io/media/";
+
+
+
+        function vis(json) {
+            console.log(json)
+            json.forEach(person => {
+
+                const tit = person.fødselsdag;
+                const patt = /[0-9][0-9][0-9][0-9][-][0-9][0-9][-][0-9][0-9]/;
+                const result = tit.match(patt);
+
+                const klon = template.cloneNode(true);
+                klon.querySelector(".billede").src = medieurl + person.billede;
+                klon.querySelector(".navn").textContent = person.fornavn + " " + person.efternavn;
+                klon.querySelector(".titel").textContent = "Titel: " + person.titel;
+                klon.querySelector(".fødseldag").textContent = "Fødselsdag: " + result;
+                klon.querySelector(".hobby").textContent = "Hobby: " + person.hobby;
+                klon.querySelector(".tro").textContent = "Troende: " + person.troende;
+                main.appendChild(klon);
+            })
+        }
+        hentData();
+    </script>
+</body></html>
