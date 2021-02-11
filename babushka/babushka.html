@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="da">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Persongalleri</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Staatliches&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+        }
+
+        body {
+            background: #FABCAF;
+        }
+
+        h1 {
+            font-family: 'Staatliches', cursive;
+            text-align: center;
+            font-size: 4.2em;
+            padding: 30px;
+            letter-spacing: 0.1em;
+        }
+
+        h2 {
+            font-family: 'Staatliches', cursive;
+            text-align: center;
+            font-size: 1.8em;
+            padding-bottom: 5px;
+        }
+
+        p {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.2em;
+        }
+
+        img {
+            width: 100%;
+            height: 300px;
+        }
+
+        header {
+            background-image: url(pic/ad.jpg);
+            height: 50vh;
+        }
+
+        #white {
+            margin: auto;
+            background-color: rgb(250, 188, 175, 0.6);
+            width: 50%;
+            height: 50%;
+            border-radius: 0px 0px 25px 25px;
+        }
+
+        nav {
+            height: 15vh;
+            background: #ED4009;
+            display: flex;
+            justify-content: center;
+        }
+
+        nav button {
+            margin: auto;
+            background: #D52A06;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.5em;
+            text-transform: uppercase;
+            border: 1px solid #BC1E03;
+            height: 100%;
+            width: 100%;
+        }
+
+        nav button:hover {
+            background: #BC1E03;
+        }
+
+
+        #liste {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-gap: 1em;
+            margin: 2em;
+
+        }
+
+        #dance img {
+            height: 100px;
+            width: 100px;
+            padding-top: 20px;
+        }
+
+        .center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+        .menu {
+            padding: 1em;
+            border: 1px solid;
+            border-radius: 10px;
+            background: #E9592E;
+        }
+
+        .menu button {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bolder;
+            background-color: #BC1E03;
+            border: 0px;
+            font-size: 1.4em;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgb(0, 0, 0);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            /* Could be more or less, depending on screen size */
+        }
+
+    </style>
+</head>
+
+<body>
+    <header>
+        <div id="white">
+            <h1>Bistro Babushka</h1>
+        </div>
+
+        <div id="dance" class="center"><img src="http://www.gif.ovh/zulu-gif/Russian%20Gif/Russian%20Gif%20(2).gif" alt="dance"></div>
+    </header>
+
+    <nav>
+        <button id="filter-alle">Alt på menuen</button>
+        <button id="filter-forretter">Forretter</button>
+        <button id="filter-hovedretter">Hovedretter</button>
+        <button id="filter-desserter">Desserter</button>
+        <button id="filter-drikkevarer">Drikkevarer</button>
+    </nav>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <p class="op"></p>
+            <p class="beskrivlang"></p>
+        </div>
+    </div>
+
+    <section id="liste"></section>
+    <template>
+        <article class="menu">
+            <h2 class="navn"></h2>
+            <img src="" alt="" class="billede">
+            <p class="pris"></p>
+            <br>
+            <p class="beskrivkort"></p>
+            <br>
+            <div class="center">
+                <button class="hej">Læs Mere</button>
+            </div>
+        </article>
+    </template>
+
+    <footer></footer>
+
+    <script>
+        const url = "https://babushka-dd8a.restdb.io/rest/menu";
+        const medieurl = "https://babushka-dd8a.restdb.io/media/";
+        const options = {
+            headers: {
+                'x-apikey': "600ec2fb1346a1524ff12de4"
+            }
+        };
+        let modal = document.getElementById("modal");
+        let span = document.getElementsByClassName("close")[0];
+
+
+        async function hentData() {
+            const resspons = await fetch(url, options);
+            const menu = await resspons.json();
+            vis(menu);
+            let forretter = menu.filter(ret => ret.kategori == "forretter");
+            let hovedretter = menu.filter(ret => ret.kategori == "hovedretter");
+            let desserter = menu.filter(ret => ret.kategori == "desserter");
+            let drikkevarer = menu.filter(ret => ret.kategori == "drikkevarer");
+
+            document.querySelector('#filter-alle').addEventListener("click", () => {
+                vis(menu);
+            });
+
+            document.querySelector('#filter-forretter').addEventListener("click", () => {
+                vis(forretter);
+
+            });
+            document.querySelector('#filter-hovedretter').addEventListener("click", () => {
+                vis(hovedretter);
+            });
+            document.querySelector('#filter-desserter').addEventListener("click", () => {
+                vis(desserter);
+            });
+            document.querySelector('#filter-drikkevarer').addEventListener("click", () => {
+                vis(drikkevarer);
+            });
+        }
+
+        function vis(menu) {
+            console.log(menu)
+            const list = document.querySelector("#liste");
+            const template = document.querySelector("template").content;
+            liste.innerHTML = "";
+
+            // Her regner vi med alt er fjernet.
+
+            menu.forEach(menu => {
+                const klon = template.cloneNode(true);
+                klon.querySelector(".navn").textContent = menu.navn;
+                klon.querySelector(".billede").src = medieurl + menu.billede;
+                klon.querySelector(".pris").textContent = "Pris: " + menu.pris;
+                klon.querySelector(".beskrivkort").textContent = menu.kortbeskrivelse;
+                klon.querySelector(".hej").addEventListener("click", () => {
+                    hello(menu._id)
+                })
+                list.appendChild(klon);
+
+            })
+        }
+
+        async function hello(id) {
+            modal.style.display = "block";
+            const res = await fetch(`https://babushka-dd8a.restdb.io/rest/menu/${id}`, options);
+            const item = await res.json();
+            modal.querySelector(".op").textContent = "Oprindelseregion: " + item.oprindelsesregion;
+            modal.querySelector(".beskrivlang").textContent = item.langbeskrivelse;
+
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+        hentData();
+
+    </script>
+</body>
+
+</html>
